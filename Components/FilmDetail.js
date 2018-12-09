@@ -12,11 +12,22 @@ class FilmDetail extends React.Component {
     super(props)
     this.state = {
       film: undefined,
-      isLoading: true
+      isLoading: false
     }
   }
 
   componentDidMount() {
+    const favoriteFilmIndex = this.props.favoritesFilm.findIndex(item => item.id === this.props.navigation.state.params.idFilm)
+    if (favoriteFilmIndex !== -1) { // Film déjà dans nos favoris, on a déjà son détail
+      // Pas besoin d'appeler l'API ici, on ajoute le détail stocké dans notre state global au state de notre component
+      this.setState({
+        film: this.props.favoritesFilm[favoriteFilmIndex]
+      })
+      return
+    }
+    // Le film n'est pas dans nos favoris, on n'a pas son détail
+    // On appelle l'API pour récupérer son détail
+    this.setState({ isLoading: true })
     getFilmDetailFromApi(this.props.navigation.state.params.idFilm).then(data => {
       this.setState({
         film: data,
@@ -65,9 +76,9 @@ class FilmDetail extends React.Component {
           />
           <Text style={styles.title_text}>{film.title}</Text>
           <TouchableOpacity
-              style={styles.favorite_container}
-              onPress={() => this._toggleFavorite()}>
-              {this._displayFavoriteImage()}
+            style={styles.favorite_container}
+            onPress={() => this._toggleFavorite()}>
+            {this._displayFavoriteImage()}
           </TouchableOpacity>
           <Text style={styles.description_text}>{film.overview}</Text>
           <Text style={styles.default_text}>Sorti le {moment(new Date(film.release_date)).format('DD/MM/YYYY')}</Text>
@@ -129,6 +140,9 @@ const styles = StyleSheet.create({
     color: '#000000',
     textAlign: 'center'
   },
+  favorite_container: {
+    alignItems: 'center',
+  },
   description_text: {
     fontStyle: 'italic',
     color: '#666666',
@@ -139,9 +153,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     marginTop: 5,
-  },
-  favorite_container: {
-    alignItems: 'center'
   },
   favorite_image: {
     width: 40,
