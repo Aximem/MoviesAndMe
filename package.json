@@ -13,7 +13,9 @@
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
     "react-native-gesture-handler": "^1.0.10",
-    "react-navigation": "^3.0.7"
+    "react-navigation": "^3.0.7",
+    "react-redux": "^6.0.0",
+    "redux": "^4.0.1"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"
